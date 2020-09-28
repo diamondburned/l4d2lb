@@ -5,6 +5,8 @@ Golang.
 
 [plugin]: https://forums.alliedmods.net/showthread.php?p=2678290
 
+![screenshot](scrot.png)
+
 ## Usage
 
 ```sh
