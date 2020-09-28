@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="//minicss.org/flavorFiles/mini-dark.min.css" type="text/css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<meta property="og:site_name" content="L4D2 Leaderboard" />
+		<title>L4D2 Leaderboard</title>
+
+		<style>
+			body {
+				margin: 0 auto;
+				height: 100vh;
+				max-width: 1200px;
+			}
+
+			table {
+				overflow: overlay !important;
+				height: 100%;
+				max-height: unset !important;
+				padding: 0 calc(1.5 * var(--universal-margin));
+				padding-bottom: var(--universal-margin);
+			}
+
+			tr > td:first-child,
+			tr > th:first-child {
+				flex: 2;
+			}
+
+			tr {
+				padding: 0 !important;
+			}
+
+			@media screen and (max-width: 767px) {
+				td {
+					padding:
+						calc(0.5 * var(--universal-padding))
+						calc(1.5 * var(--universal-padding)) !important;
+				}
+
+				td:first-child {
+					padding-top: var(--universal-padding) !important;
+				}
+
+				td:last-child {
+					padding-bottom: var(--universal-padding) !important;
+				}
+			}
+
+			*::-webkit-scrollbar,
+			*::-webkit-scrollbar-track {
+				background-color: transparent;
+				width: calc(0.5 * var(--universal-margin));
+			}
+			
+			*::-webkit-scrollbar-thumb {
+				background-color: var(--table-border-color);
+				width: calc(0.5 * var(--universal-margin));
+			}
+
+			*::-webkit-scrollbar-thumb:hover {
+				background-color: var(--fore-color);
+			}
+		</style>
+	</head>
+
+	<body>
+		<table>
+			<caption>Leaderboard</caption>
+			<thead>
+				<tr>
+					<th>Player</th>
+					<th>Points ▼</th>
+					<th>Kills</th>
+					<th>Melee Kills</th>
+					<th>Headshots</th>
+					<th>Friendly Fire Incidents</th>
+					<th>Incapacitated Friendlies</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{ range . }}
+				<tr>
+					<td data-label="Player">
+						<a href="{{ .URL }}" aria-label="Profile">{{.Name}}</a>
+					</td>
+					<td data-label="Points">{{.Points}}</td>
+					<td data-label="Kills">{{.Kills}}</td>
+					<td data-label="Melee Kills">{{.MeleeKills}}</td>
+					<td data-label="Headshots">{{.Headshots}}</td>
+					<td data-label="Friendly Fire Incidents">{{.AwardFriendlyfire}}</td>
+					<td data-label="Incapacitated Friendlies">{{.AwardFincap}}</td>
+				</tr>
+				{{ end }}
+			</tbody>
+		</table>
+	</body>
+</html>

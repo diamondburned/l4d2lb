@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="//minicss.org/flavorFiles/mini-dark.min.css" type="text/css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<style>
+			body {
+				width:  100vw;
+				height: 100vh;
+				margin: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			div.card.error {
+				width: 100%;
+				max-width: 300px;
+				padding: 1em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="card large error">
+			<h2><b>Error!</b></h2>
+			<p><big>{{ . }}<big></p>
+		</div>
+	</body>
+</html>
