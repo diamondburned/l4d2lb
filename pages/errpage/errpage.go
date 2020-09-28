@@ -10,7 +10,7 @@ import (
 var tmpl *template.Template
 
 func init() {
-	tmpl = pages.Template("errpage")
+	tmpl = pages.Template("errpage", nil)
 }
 
 func RenderPage(w http.ResponseWriter, err error) {

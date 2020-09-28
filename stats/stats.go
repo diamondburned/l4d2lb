@@ -43,36 +43,66 @@ func Connect(addr string) (*Database, error) {
 	return &Database{d}, nil
 }
 
+type PlayerResults struct {
+	Players []Player
+	HasMore bool
+}
+
+var noResults = PlayerResults{}
+
 var playerQuery = fmt.Sprintf(
 	"SELECT %s FROM players ORDER BY points DESC LIMIT ? OFFSET ?",
 	strings.Join(playerColumns(), ","),
 )
 
 // Leaderboard fetches the leaderboard. The page count is 0-indexed.
-func (d *Database) Leaderboard(count, page int) ([]Player, error) {
-	page *= count
-	r, err := d.DB.Queryx(playerQuery, count, page)
+func (d *Database) Leaderboard(count, page int) (PlayerResults, error) {
+	return d.queryPlayers(playerQuery, count, count+1, page*count)
+}
+
+var searchQuery = fmt.Sprintf(
+	"SELECT %s FROM players WHERE name LIKE ? ORDER BY points DESC LIMIT ? OFFSET ?",
+	strings.Join(playerColumns(), ","),
+)
+
+var queryEscaper = strings.NewReplacer(
+	"%", `\%`,
+	`\`, `\\`,
+)
+
+// Search searches the leaderboard for players. The page count is 0-indexed.
+func (d *Database) Search(queryString string, count, page int) (PlayerResults, error) {
+	queryString = queryEscaper.Replace(queryString)
+	return d.queryPlayers(searchQuery, count, queryString, count+1, page*count)
+}
+
+func (d *Database) queryPlayers(query string, lim int, v ...interface{}) (PlayerResults, error) {
+	r, err := d.DB.Queryx(query, v...)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to query")
+		return noResults, errors.Wrap(err, "failed to query")
 	}
 
 	defer r.Close()
 
-	var players []Player
+	var results PlayerResults
 
-	for r.Next() {
+	for i := 0; r.Next(); i++ {
 		var player Player
 
 		if err := r.StructScan(&player); err != nil {
-			return nil, errors.Wrap(err, "failed to scan to player")
+			return noResults, errors.Wrap(err, "failed to scan to player")
 		}
 
-		players = append(players, player)
+		if i == lim {
+			results.HasMore = true
+		} else {
+			results.Players = append(results.Players, player)
+		}
 	}
 
 	if err := r.Err(); err != nil {
-		return nil, errors.Wrap(err, "failed to finish scanning")
+		return noResults, errors.Wrap(err, "failed to finish scanning")
 	}
 
-	return players, nil
+	return results, nil
 }

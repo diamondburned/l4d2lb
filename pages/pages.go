@@ -12,7 +12,7 @@ import (
 
 //go:generate go run github.com/phogolabs/parcello/cmd/parcello -r -i *.go
 
-func Template(name string) *template.Template {
+func Template(name string, funcMap template.FuncMap) *template.Template {
 	f, err := parcello.Open(filepath.Join(name, name+".html"))
 	if err != nil {
 		log.Fatalln("Failed to open file:", err)
@@ -25,6 +25,7 @@ func Template(name string) *template.Template {
 	}
 
 	tmpl := template.New(name)
+	tmpl = tmpl.Funcs(funcMap)
 	tmpl = template.Must(tmpl.Parse(string(b)))
 	return tmpl
 }

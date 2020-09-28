@@ -15,7 +15,10 @@ import (
 var tmpl *template.Template
 
 func init() {
-	tmpl = pages.Template("leaderboard")
+	tmpl = pages.Template("leaderboard", map[string]interface{}{
+		"dec": func(i int) int { return i - 1 },
+		"inc": func(i int) int { return i + 1 },
+	})
 }
 
 func Mount(statsDB *stats.Database) http.Handler {
@@ -26,6 +29,8 @@ func Mount(statsDB *stats.Database) http.Handler {
 }
 
 func getPageNumber(r *http.Request) int {
+	r.ParseForm()
+
 	v := r.FormValue("p")
 	i, err := strconv.Atoi(v)
 	if err != nil {
@@ -41,14 +46,24 @@ func getPageNumber(r *http.Request) int {
 
 const PlayerPerPage = 100
 
+type PageInfo struct {
+	stats.PlayerResults
+	Page int
+}
+
 func renderPage(statsDB *stats.Database) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		players, err := statsDB.Leaderboard(PlayerPerPage, getPageNumber(r))
+		var pageNum = getPageNumber(r)
+
+		results, err := statsDB.Leaderboard(PlayerPerPage, pageNum)
 		if err != nil {
 			errpage.RenderError(w, 400, errors.Wrap(err, "failed to get leaderboard"))
 			return
 		}
 
-		pages.Execute(tmpl, w, players)
+		pages.Execute(tmpl, w, PageInfo{
+			PlayerResults: results,
+			Page:          pageNum + 1,
+		})
 	}
 }

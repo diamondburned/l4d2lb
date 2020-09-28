@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -31,6 +32,14 @@ func main() {
 
 	if strings.HasPrefix(httpAddr, "unix://") {
 		httpAddr = strings.TrimPrefix(httpAddr, "unix://")
+
+		// Ensure that the socket is cleaned up because we're not gracefully
+		// handling closes.
+		if err := os.Remove(httpAddr); err != nil {
+			if !errors.Is(err, os.ErrNotExist) {
+				log.Fatalln("Failed to clean up old socket:", err)
+			}
+		}
 
 		l, err := net.Listen("unix", httpAddr)
 		if err != nil {

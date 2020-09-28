@@ -61,12 +61,43 @@
 			*::-webkit-scrollbar-thumb:hover {
 				background-color: var(--fore-color);
 			}
+
+			form.seamless {
+			    background: inherit;
+				color: inherit;
+			    border: none;
+			    margin: 0;
+			    padding: 0;
+			    border-radius: 0;
+			}
+
+			form.pager button:disabled {
+			    opacity: 0.45;
+			}
 		</style>
 	</head>
 
 	<body>
 		<table>
-			<caption>Leaderboard</caption>
+			<caption>
+				<form class="seamless pager">
+					<button type="submit" class="prev small" aria-label="Previous"
+							name="p" value="{{ dec .Page }}"
+						{{ if (le .Page 1) }}
+							disabled
+						{{ end }}
+					 >❮</button>
+
+					<span>Leaderboard</span>
+
+					<button type="submit" class="next small" aria-label="Next"
+							name="p" value="{{ inc .Page }}"
+						{{ if (not .HasMore) }}
+							disabled
+						{{ end }}
+					>❯</button>
+				</form>
+			</caption>
 			<thead>
 				<tr>
 					<th>Player</th>
@@ -79,7 +110,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{ range . }}
+				{{ range .Players }}
 				<tr>
 					<td data-label="Player">
 						<a href="{{ .URL }}" aria-label="Profile">{{.Name}}</a>
