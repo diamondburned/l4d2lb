@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="//minicss.org/flavorFiles/mini-dark.min.css" type="text/css" />
+		<link rel="stylesheet" href="/static/style.css" type="text/css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<meta property="og:site_name" content="{{ .SiteName }}" />
+		<meta property="og:title" content="Homepage" />
+		<title>Homepage</title>
+
+		<!-- <style> -->
+		<!-- </style> -->
+
+	</head>
+
+	<body>
+		{{ template "loading-header" }}
+		{{ template "header" . }}
+
+		<main>
+			<div id="stats">{{ stats . }}</div>
+			<div id="players">{{ players . }}</div>
+			<div id="maps">{{ maps . }}</div>
+		</main>
+
+		{{ template "loading-footer" }}
+	</body>
+</html>

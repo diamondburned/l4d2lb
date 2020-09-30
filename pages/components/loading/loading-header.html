@@ -1,0 +1,29 @@
+<style>
+	div.loading-overlay {
+	    position: fixed;
+	    width: 100vw;
+	    height: 100vh;
+	    top: 0;
+	    left: 0;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    background-color: rgba(0, 0, 0, 0.25);
+	    opacity: 1;
+	    transition: linear 100ms opacity;
+	    z-index: 9999;
+	    backdrop-filter: blur(10px);
+	}
+
+	div.loading-overlay div.spinner {
+		--spinner-back-color: var(--back-color);
+		--spinner-fore-color: var(--fore-color);
+		width:  3rem;
+		height: 3rem;
+		border-width: .5rem;
+	}
+</style>
+
+<div class="loading-overlay">
+	<div class="spinner"></div>
+</div>

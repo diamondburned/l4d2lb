@@ -1,0 +1,56 @@
+<table>
+	<caption>
+		<form class="seamless pager">
+			<div>
+				<button type="submit" class="prev" aria-label="Previous"
+						name="p" value="{{ dec .Page }}"
+					{{ if (le .Page 1) }}
+						disabled
+					{{ end }}
+				 >❮</button>
+
+				<h3 style="display: inline">
+					<a href="?">Leaderboard</a>
+				</h3>
+
+				<button type="submit" class="next" aria-label="Next"
+						name="p" value="{{ inc .Page }}"
+					{{ if (not .HasMore) }}
+						disabled
+					{{ end }}
+				>❯</button>
+			</div>
+
+			<div>
+				<input type="text" class="small" name="q" value="{{.Query}}" placeholder="Search">
+				<input type="submit" style="display:none">
+			</div>
+		</form>
+	</caption>
+	<thead>
+		<tr>
+			<th>Player</th>
+			<th>Points ▼</th>
+			<th>Kills</th>
+			<th>Melee Kills</th>
+			<th>Headshots</th>
+			<th>Friendly Fire Incidents</th>
+			<th>Incapacitated Friendlies</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{ range .Players }}
+		<tr>
+			<td data-label="Player">
+				<a href="{{ .URL }}" aria-label="Profile">{{.Name}}</a>
+			</td>
+			<td data-label="Points">{{.Points}}</td>
+			<td data-label="Kills">{{.Kills}}</td>
+			<td data-label="Melee Kills">{{.MeleeKills}}</td>
+			<td data-label="Headshots">{{.Headshots}}</td>
+			<td data-label="Friendly Fire Incidents">{{.AwardFriendlyfire}}</td>
+			<td data-label="Incapacitated Friendlies">{{.AwardFincap}}</td>
+		</tr>
+		{{ end }}
+	</tbody>
+</table>

@@ -8,7 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/diamondburned/l4d2lb/pages/leaderboard"
+	"github.com/diamondburned/l4d2lb/pages"
+	"github.com/diamondburned/l4d2lb/pages/index"
 	"github.com/diamondburned/l4d2lb/stats"
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
@@ -24,8 +25,19 @@ func main() {
 		log.Fatalln("Failed to connect:", err)
 	}
 
+	var siteName string
+	if v := os.Getenv("L4D2LB_SVNAME"); v != "" {
+		siteName = v
+	} else {
+		siteName = "Left 4 Dead 2"
+	}
+
 	r := chi.NewMux()
-	r.Mount("/", leaderboard.Mount(s))
+	r.Mount("/static", http.StripPrefix("/static", pages.MountStatic()))
+	r.Mount("/", index.Mount(&pages.RenderState{
+		Database: s,
+		SiteName: siteName,
+	}))
 
 	var httpAddr = os.Getenv("HTTP_FADDRESS")
 	log.Println("Starting up at", httpAddr)

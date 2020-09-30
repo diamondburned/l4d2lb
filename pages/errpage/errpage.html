@@ -18,6 +18,19 @@
 				width: 100%;
 				max-width: 300px;
 				padding: 1em;
+				opacity: 0.25;
+				transition: linear 20ms opacity;
+			}
+			div.card.error:hover {
+				opacity: 1;
+			}
+
+			small.debug {
+				font-family: monospace;
+				display: none;
+			}
+			div.card.error:hover small.debug {
+				display: block;
 			}
 		</style>
 	</head>
@@ -25,7 +38,8 @@
 	<body>
 		<div class="card large error">
 			<h2><b>Error!</b></h2>
-			<p><big>{{ . }}<big></p>
+			<p><big>{{ shorten . }}</big></p>
+			<p><small class="debug">{{ . }}</small></p>
 		</div>
 	</body>
 </html>

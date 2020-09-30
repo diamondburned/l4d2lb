@@ -1,0 +1,21 @@
+body {
+	overflow: overlay;
+
+	margin: 0 auto;
+	height: 100vh;
+	max-width: 1200px;
+}
+
+header {
+	display: flex;
+	align-items: center;
+}
+
+form.seamless {
+    background: inherit;
+	color: inherit;
+    border: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
