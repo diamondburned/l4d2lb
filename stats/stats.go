@@ -23,8 +23,8 @@ func Connect(addr string) (*Database, error) {
 	}
 
 	d.SetConnMaxLifetime(5 * time.Minute)
-	d.SetMaxOpenConns(8)
-	d.SetMaxIdleConns(8)
+	d.SetMaxOpenConns(100)
+	d.SetMaxIdleConns(100)
 
 	return &Database{d}, nil
 }

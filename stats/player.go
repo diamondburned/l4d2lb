@@ -76,7 +76,7 @@ var queryEscaper = strings.NewReplacer(
 
 var playerColumnsNoIndex = strings.Join(rfsql.Columns(Player{})[1:], ",")
 
-func buildPlayerQuery(isSearch bool, sort string) (query string) {
+func buildPlayerQuery(isSearch bool, sort string) string {
 	// Constants used in Sprintf.
 	const sflimit = "LIMIT ? OFFSET ?"
 	const fstring = "SELECT ROW_NUMBER() OVER(ORDER BY %s DESC) ix, %s FROM players ORDER BY ix"
@@ -85,12 +85,10 @@ func buildPlayerQuery(isSearch bool, sort string) (query string) {
 		"WHERE CONVERT(sorted.name USING utf8mb4) COLLATE utf8mb4_general_ci LIKE ? " + sflimit
 
 	if isSearch {
-		query = fmt.Sprintf(fsearch, sort, playerColumnsNoIndex)
+		return fmt.Sprintf(fsearch, sort, playerColumnsNoIndex)
 	} else {
-		query = fmt.Sprintf(fstrlim, sort, playerColumnsNoIndex)
+		return fmt.Sprintf(fstrlim, sort, playerColumnsNoIndex)
 	}
-
-	return
 }
 
 // Leaderboard searches the leaderboard for players. The page count is
