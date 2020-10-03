@@ -22,7 +22,7 @@ func Columns(v interface{}) []string {
 			continue // skip unexported fields
 		}
 
-		if db, ok := t.Field(i).Tag.Lookup("db"); ok {
+		if db, ok := f.Tag.Lookup("db"); ok && f.Tag.Get("rfsql") != "-" {
 			cols = append(cols, db)
 		}
 	}

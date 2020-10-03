@@ -12,7 +12,7 @@ import (
 
 // Player contains some statistics of each player.
 type Player struct {
-	Index             int     `db:"ix"`
+	Index             int     `db:"ix" rfsql:"-"`
 	SteamID           SteamID `db:"steamid"`
 	Name              string  `db:"name"`
 	Kills             int64   `db:"kills"`
@@ -74,20 +74,20 @@ var queryEscaper = strings.NewReplacer(
 	`\`, `\\`,
 )
 
-var playerColumnsNoIndex = strings.Join(rfsql.Columns(Player{})[1:], ",")
+var playerColumns = strings.Join(rfsql.Columns(Player{}), ",")
 
 func buildPlayerQuery(isSearch bool, sort string) string {
 	// Constants used in Sprintf.
 	const sflimit = "LIMIT ? OFFSET ?"
 	const fstring = "SELECT ROW_NUMBER() OVER(ORDER BY %s DESC) ix, %s FROM players ORDER BY ix"
-	const fstrlim = fstring + " " + sflimit
 	const fsearch = "SELECT * FROM (" + fstring + ") AS sorted " +
 		"WHERE CONVERT(sorted.name USING utf8mb4) COLLATE utf8mb4_general_ci LIKE ? " + sflimit
+	const fstrlim = fstring + " " + sflimit
 
 	if isSearch {
-		return fmt.Sprintf(fsearch, sort, playerColumnsNoIndex)
+		return fmt.Sprintf(fsearch, sort, playerColumns)
 	} else {
-		return fmt.Sprintf(fstrlim, sort, playerColumnsNoIndex)
+		return fmt.Sprintf(fstrlim, sort, playerColumns)
 	}
 }
 

@@ -17,15 +17,41 @@
 				padding-bottom: var(--universal-margin);
 			}
 
-			tr > td:nth-child(2),
-			tr > th:nth-child(2) {
-				flex: 2.5;
+			thead th {
+				display: flex;
+				align-items: flex-end;
+				justify-content: left;
 			}
 
-			tr > td:first-child,
-			tr > th:first-child {
-				text-align: end;
+			table td,
+			table th {
+				word-break: unset;
+				text-overflow: initial;
+				overflow-wrap: break-word;
+			}
+
+			table td:nth-child(2),
+			table th:nth-child(2) {
+				flex: 2;
+			}
+
+			table td:first-child,
+			table th:first-child {
 				flex: 0 3rem;
+				text-align: end;
+				justify-content: flex-end;
+			}
+
+			thead th button.link,
+			thead th button.link:hover,
+			thead th button.link:active {
+				color: var(--a-link-color);
+				border:  0;
+				margin:  0;
+				padding: 0;
+				text-align: left;
+				background: none;
+				font-weight: bold;
 			}
 
 			@media screen and (max-width: 767px) {

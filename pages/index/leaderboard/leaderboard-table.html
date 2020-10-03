@@ -1,39 +1,86 @@
+<form class="seamless pager">
+<input type="submit" style="display:none">
+
 <table>
 	<caption>
-		<form class="seamless pager">
-			<input type="submit" style="display:none">
+		<div>
+			<button type="submit" class="prev" aria-label="Previous"
+					name="p" value="{{ dec .Page }}"
+				{{ if (le .Page 1) }}
+					disabled
+				{{ end }}
+			 >❮</button>
 
-			<div>
-				<button type="submit" class="prev" aria-label="Previous"
-						name="p" value="{{ dec .Page }}"
-					{{ if (le .Page 1) }}
-						disabled
-					{{ end }}
-				 >❮</button>
+			<h3 style="display: inline">Leaderboard</h3>
 
-				<h3 style="display: inline">Leaderboard</h3>
+			<button type="submit" class="next" aria-label="Next"
+					name="p" value="{{ inc .Page }}"
+				{{ if (not .HasMore) }}
+					disabled
+				{{ end }}
+			>❯</button>
+		</div>
 
-				<button type="submit" class="next" aria-label="Next"
-						name="p" value="{{ inc .Page }}"
-					{{ if (not .HasMore) }}
-						disabled
-					{{ end }}
-				>❯</button>
-			</div>
-
-			<input type="text" class="small" name="q" value="{{.Query}}" placeholder="Search">
-		</form>
+		<input type="text" class="small" name="q" value="{{.Query}}" placeholder="Search">
 	</caption>
 	<thead>
 		<tr>
 			<th>Rank</th>
 			<th>Player</th>
-			<th>Points ▼</th>
-			<th>Kills</th>
-			<th>Melee Kills</th>
-			<th>Headshots</th>
-			<th>Friendly Fire Incidents</th>
-			<th>Incapacitated Friendlies</th>
+
+			<th>
+				<button class="link" type="submit" name="s" value="points">
+					Points
+				</button>
+				{{ if (or (eq .Sort "points") (eq .Sort "")) }}
+				<span class="sorting-by">▼</span>
+				{{ end }}
+			</th>
+
+			<th>
+				<button class="link" type="submit" name="s" value="kills">
+					Kills
+				</button>
+				{{ if (eq .Sort "kills") }}
+				<span class="sorting-by">▼</span>
+				{{ end }}
+			</th>
+
+			<th>
+				<button class="link" type="submit" name="s" value="melee_kills">
+					Melee Kills
+				</button>
+				{{ if (eq .Sort "melee_kills") }}
+				<span class="sorting-by">▼</span>
+				{{ end }}
+			</th>
+
+			<th>
+				<button class="link" type="submit" name="s" value="headshots">
+					Headshots
+				</button>
+				{{ if (eq .Sort "headshots") }}
+				<span class="sorting-by">▼</span>
+				{{ end }}
+			</th>
+
+			<th>
+				<button class="link" type="submit" name="s" value="award_friendlyfire">
+					Friendly Fire Incidents
+				</button>
+				{{ if (eq .Sort "award_friendlyfire") }}
+				<span class="sorting-by">▼</span>
+				{{ end }}
+			</th>
+
+			<th>
+				<button class="link" type="submit" name="s" value="award_fincap">
+					Incapacitated Friendlies
+				</button>
+				{{ if (eq .Sort "award_fincap") }}
+				<span class="sorting-by">▼</span>
+				{{ end }}
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -53,3 +100,8 @@
 		{{ end }}
 	</tbody>
 </table>
+
+{{/* The submits should take precedence over these states */}}
+<input type="text" name="s" value="{{.Sort}}" style="display:none">
+<input type="text" name="p" value="{{.Page}}" style="display:none">
+</form>
