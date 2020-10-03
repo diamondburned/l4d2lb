@@ -30,3 +30,12 @@ func Columns(v interface{}) []string {
 	cache.Store(t, cols)
 	return cols
 }
+
+func IsValidColumn(v interface{}, colName string) bool {
+	for _, column := range Columns(v) {
+		if column == colName {
+			return true
+		}
+	}
+	return false
+}

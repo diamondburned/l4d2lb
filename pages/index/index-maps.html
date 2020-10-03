@@ -1,0 +1,21 @@
+<table id="top-maps">
+	<caption>Top Maps</caption>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Kills</th>
+			<th>Points</th>
+			<th>Playtime ▼</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{ range . }}
+		<tr>
+			<td data-label="Name">{{.Name}}</td>
+			<td data-label="Kills">{{.Kills}}</td>
+			<td data-label="Points">{{.Points}}</td>
+			<td data-label="Playtime">{{duras .ConvertPlaytime}}</td>
+		</tr>
+		{{ end }}
+	</tbody>
+</table>

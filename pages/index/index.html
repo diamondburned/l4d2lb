@@ -9,9 +9,24 @@
 		<meta property="og:title" content="Homepage" />
 		<title>Homepage</title>
 
-		<!-- <style> -->
-		<!-- </style> -->
+		<style>
+			table:not(.horizontal) tr > td:first-child,
+			table:not(.horizontal) tr > th:first-child {
+				flex: 2;
+			}
 
+			table th, table td {
+				padding:
+					var(--universal-padding)
+					calc(2 * var(--universal-padding));
+			}
+
+			table:not(.horizontal) thead th {
+				padding:
+					calc(1.1 * var(--universal-padding))
+					calc(2.0 * var(--universal-padding));
+			}
+		</style>
 	</head>
 
 	<body>
@@ -19,11 +34,12 @@
 		{{ template "header" . }}
 
 		<main>
-			<div id="stats">{{ stats . }}</div>
-			<div id="players">{{ players . }}</div>
-			<div id="maps">{{ maps . }}</div>
+			<div id="stats">{{ .Statistics.Render }}</div>
+			<div id="players">{{ .TopPlayers.Render }}</div>
+			<div id="maps">{{ .TopMaps.Render }}</div>
 		</main>
 
+		{{ template "footer" . }}
 		{{ template "loading-footer" }}
 	</body>
 </html>

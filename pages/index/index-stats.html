@@ -1,0 +1,21 @@
+<table class="horizontal" id="stats">
+	<caption>Statistics</caption>
+	<thead>
+		<tr>
+			<th>Players Served</th>
+			<th>Total Kills</th>
+			<th>Total Points</th>
+			<th>Total Playtime</th>
+			<th>Total Headshots</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td data-label="Players Served">{{ human .PlayersServed }}</td>
+			<td data-label="Total Kills">{{ human .TotalKills }}</td>
+			<td data-label="Total Points">{{ human .TotalPoints }}</td>
+			<td data-label="Total Playtime">{{ dural .ConvertTotalPlaytime }}</td>
+			<td data-label="Total Headshots">{{ human .TotalHeadshots }}</td>
+		</tr>
+	</tbody>
+</table>

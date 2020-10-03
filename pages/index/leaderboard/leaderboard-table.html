@@ -1,6 +1,8 @@
 <table>
 	<caption>
 		<form class="seamless pager">
+			<input type="submit" style="display:none">
+
 			<div>
 				<button type="submit" class="prev" aria-label="Previous"
 						name="p" value="{{ dec .Page }}"
@@ -19,14 +21,12 @@
 				>❯</button>
 			</div>
 
-			<div>
-				<input type="text" class="small" name="q" value="{{.Query}}" placeholder="Search">
-				<input type="submit" style="display:none">
-			</div>
+			<input type="text" class="small" name="q" value="{{.Query}}" placeholder="Search">
 		</form>
 	</caption>
 	<thead>
 		<tr>
+			<th>Rank</th>
 			<th>Player</th>
 			<th>Points ▼</th>
 			<th>Kills</th>
@@ -39,6 +39,7 @@
 	<tbody>
 		{{ range .Players }}
 		<tr>
+			<td data-label="Rank">{{.Index}}</td>
 			<td data-label="Player">
 				<a href="{{ .URL }}" aria-label="Profile">{{.Name}}</a>
 			</td>

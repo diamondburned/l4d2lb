@@ -1,0 +1,23 @@
+<table id="top-players">
+	<caption>Top Players</caption>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Kills</th>
+			<th>Points</th>
+			<th>Playtime ▼</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{ range . }}
+		<tr>
+			<td data-label="Name">
+				<a href="{{ .URL }}" aria-label="Profile">{{.Name}}</a>
+			</td>
+			<td data-label="Kills">{{.Kills}}</td>
+			<td data-label="Points">{{.Points}}</td>
+			<td data-label="Playtime">{{duras .ConvertPlaytime}}</td>
+		</tr>
+		{{ end }}
+	</tbody>
+</table>

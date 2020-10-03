@@ -90,6 +90,12 @@ type Template struct {
 	*RenderState
 }
 
+// RenderHandler renders into the writer as a handler. It renders with the
+// receiver as the argument.
+func (s *Template) RenderHandler(w http.ResponseWriter, r *http.Request) {
+	s.Execute(w, s)
+}
+
 func (s *Template) Execute(w io.Writer, v interface{}) {
 	Execute(s.Template, w, v)
 }
@@ -108,6 +114,12 @@ func (s *Template) RenderHTMLComponent(name string, v interface{}) template.HTML
 	var buf bytes.Buffer
 	s.ExecuteComponent(&buf, name, v)
 	return template.HTML(buf.String())
+}
+
+func (s *Template) HTMLComponentRenderer(name string) func(interface{}) template.HTML {
+	return func(v interface{}) template.HTML {
+		return s.RenderHTMLComponent(name, v)
+	}
 }
 
 func (s *Template) AddComponent(path string) {

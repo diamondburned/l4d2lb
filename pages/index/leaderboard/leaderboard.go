@@ -6,12 +6,12 @@ import (
 	"strconv"
 
 	"github.com/diamondburned/l4d2lb/pages"
-	"github.com/diamondburned/l4d2lb/pages/components/errbox"
+	"github.com/diamondburned/l4d2lb/pages/components/footer"
 	"github.com/diamondburned/l4d2lb/pages/components/header"
 	"github.com/diamondburned/l4d2lb/pages/components/loading"
+	"github.com/diamondburned/l4d2lb/pages/internal/pararender"
 	"github.com/diamondburned/l4d2lb/stats"
 	"github.com/go-chi/chi"
-	"github.com/pkg/errors"
 )
 
 func Mount(state *pages.RenderState) http.Handler {
@@ -19,9 +19,10 @@ func Mount(state *pages.RenderState) http.Handler {
 		"dec": func(i int) int { return i - 1 },
 		"inc": func(i int) int { return i + 1 },
 
-		"leaderboard": renderLeaderboard,
+		"leaderboard": func(info Info) template.HTML { return info.Leaderboard.Render() },
 	})
 	tpl.AddComponent(header.Path)
+	tpl.AddComponent(footer.Path)
 	tpl.AddComponent(loading.Header) // loading-header
 	tpl.AddComponent(loading.Footer) // loading-footer
 	tpl.AddComponent("index/leaderboard/leaderboard-table.html")
@@ -52,44 +53,42 @@ const PlayerPerPage = 100
 
 type Info struct {
 	*pages.Template
+	Leaderboard pararender.Task
+}
+
+type Leaderboard struct {
+	stats.PlayerResults
 	Page  int
+	Sort  string
 	Query string
 }
 
 func renderPage(tpl *pages.Template) http.HandlerFunc {
+	var leaderboard = tpl.HTMLComponentRenderer("leaderboard-table")
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		var pageNum = getPageNumber(r)
-		var query = r.FormValue("q")
+		var info = Info{
+			Template:    tpl,
+			Leaderboard: pararender.EmptyTask(leaderboard),
+		}
 
-		tpl.Execute(w, Info{
-			Template: tpl,
-			Page:     pageNum,
-			Query:    query,
-		})
+		go func() {
+			rv := tpl.WithContext(r.Context())
+			lb := Leaderboard{
+				Page:  getPageNumber(r),
+				Sort:  r.FormValue("s"),
+				Query: r.FormValue("q"),
+			}
+
+			v, err := rv.Leaderboard(lb.Query, lb.Sort, PlayerPerPage, lb.Page-1)
+			if err != nil {
+				info.Leaderboard.Send(nil, err)
+				return
+			}
+			lb.PlayerResults = v
+			info.Leaderboard.Send(lb, nil)
+		}()
+
+		tpl.Execute(w, info)
 	}
-}
-
-type Leaderboard struct {
-	Info
-	stats.PlayerResults
-}
-
-func renderLeaderboard(info Info) template.HTML {
-	var results stats.PlayerResults
-	var err error
-
-	if info.Query != "" {
-		results, err = info.SearchLeaderboard(info.Query, PlayerPerPage, info.Page-1)
-	} else {
-		results, err = info.Leaderboard(PlayerPerPage, info.Page-1)
-	}
-
-	if err != nil {
-		return errbox.RenderHTML(errors.Wrap(err, "failed to get leaderboard"))
-	}
-
-	return info.RenderHTMLComponent("leaderboard-table", Leaderboard{
-		Info:          info,
-		PlayerResults: results,
-	})
 }

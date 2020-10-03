@@ -9,6 +9,8 @@ Golang.
 
 ## Usage
 
+This web application requires MariaDB.
+
 ```sh
 go build -o ./l4d2lb
 cp env.default env # edit `env'
